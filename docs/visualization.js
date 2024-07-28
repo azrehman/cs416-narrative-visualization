@@ -3,8 +3,12 @@
 const dateParser = d3.timeParse('%Y-%m-%d');
 
 // load data
+
+var loc = window.location.pathname;
+var dir = loc.substring(0, loc.lastIndexOf('/'));
+console.log(loc, dir);
 const data = d3
-    .csv('../data/indexProcessed.csv', (d) => {
+    .csv('./indexProcessed.csv', (d) => {
         return {
             index: d.Index,
             date: dateParser(d.Date),
