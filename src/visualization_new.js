@@ -122,7 +122,6 @@ function plot(marketData) {
                     .attr('text-anchor', 'start')
                     .text('↑ Daily Close ($)')
             );
-
     // add y axis
     const gy = svg.append('g').call(yAxis, y);
 
@@ -139,38 +138,6 @@ function plot(marketData) {
         .attr('stroke', 'steelblue')
         .attr('stroke-width', 1.5)
         .attr('d', line(marketData));
-
-    const zoom = d3
-        .zoom()
-        .scaleExtent([1, 32])
-        .extent([
-            [margin.left, 0],
-            [width - margin.right, height],
-        ])
-        .translateExtent([
-            [margin.left, -Infinity],
-            [width - margin.right, Infinity],
-        ])
-        .on('zoom', zoomed);
-    function zoomed(event) {
-        const xz = event.transform.rescaleX(x);
-        const yz = event.transform.rescaleY(y);
-
-        // update domain on copied x scale so hover function can find the correct point
-        xcopy.domain(xz.domain());
-        ycopy.domain(yz.domain());
-
-        // redraw paths with new x zoomed scale
-        // path.attr('d', (d) => line(d.values, xz, yz));
-        // find and redraw closest point path
-        const pointer = d3.pointer(event, this);
-        if (event.sourceEvent.type === 'mousemove') {
-            highlightPoint(pointer, svg, path);
-        }
-        gx.call(xAxis, xz);
-        gy.call(yAxis, yz);
-    }
-    svg.call(zoom);
 
     // create tooltip
     // const tooltip = svg.append('g');
@@ -236,6 +203,38 @@ function plot(marketData) {
 
         tooltip.style('display', 'none');
     }
+
+    const zoom = d3
+        .zoom()
+        .scaleExtent([1, 32])
+        .extent([
+            [margin.left, 0],
+            [width - margin.right, height],
+        ])
+        .translateExtent([
+            [margin.left, -Infinity],
+            [width - margin.right, Infinity],
+        ])
+        .on('zoom', zoomed);
+    function zoomed(event) {
+        const xz = event.transform.rescaleX(x);
+        const yz = event.transform.rescaleY(y);
+
+        // update domain on copied x scale so hover function can find the correct point
+        xcopy.domain(xz.domain());
+        ycopy.domain(yz.domain());
+
+        // redraw paths with new x zoomed scale
+        // path.attr('d', (d) => line(d.values, xz, yz));
+        // find and redraw closest point path
+        const pointer = d3.pointer(event, this);
+        if (event.sourceEvent.type === 'mousemove') {
+            highlightPoint(pointer, svg, path);
+        }
+        gx.call(xAxis, xz);
+        gy.call(yAxis, yz);
+    }
+    svg.call(zoom);
 
     return svg.node();
 }
