@@ -401,7 +401,10 @@ function plot(marketData, title = '') {
             .attr('class', 'tooltip')
             .style('display', 'block')
             .style('left', `${xPos + 25}px`)
-            .style('top', `${yPos + height - window.innerHeight}px`)
+            .style(
+                'top',
+                `${document.getElementById('clip').clientHeight + yPos}px`
+            )
             .attr('position', 'fixed')
             .html(
                 `<strong>Close:</strong> ${
