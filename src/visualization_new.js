@@ -128,14 +128,6 @@ function plot(marketData) {
         .x((d) => x(d.date))
         .y((d) => y(d.close));
 
-    // const area = (x, y) =>
-    //     d3
-    //         .area()
-    //         .defined((d) => !isNaN(d.close))
-    //         .x((d) => x(d.date))
-    //         .y0(y(0))
-    //         .y1((d) => y(d.close));
-
     // add line to path
     // const path = svg
     //     .append('path')
@@ -230,21 +222,21 @@ function plot(marketData) {
 
     const area = svg.append('g').attr('clip-path', 'url(#clip)');
 
-    const areaGenerator = d3
-        .area()
-        .x((d) => x(d.date))
-        .y0(y(0))
-        .y1((d) => y(d.close));
+    // const areaGenerator = d3
+    //     .area()
+    //     .x((d) => x(d.date))
+    //     .y0(y(0))
+    //     .y1((d) => y(d.close));
 
     // Add the area
     area.append('path')
         .datum(marketData)
         .attr('class', 'myArea') // I add the class myArea to be able to modify it later on.
-        .attr('fill', '#69b3a2')
-        .attr('fill-opacity', 0.5)
-        .attr('stroke', 'black')
-        .attr('stroke-width', 1)
-        .attr('d', areaGenerator);
+        .attr('fill', 'none')
+        // .attr('fill-opacity', 0.5)
+        .attr('stroke', 'steelblue')
+        .attr('stroke-width', 1.5)
+        .attr('d', line);
 
     area.append('g').attr('class', 'brush').call(brush);
 
@@ -269,18 +261,15 @@ function plot(marketData) {
         }
 
         // Update axis and area position
-        gx.transition().duration(1000).call(d3.axisBottom(x));
-        area.select('.myArea')
-            .transition()
-            .duration(1000)
-            .attr('d', areaGenerator);
+        gx.transition().duration(1500).call(d3.axisBottom(x));
+        area.select('.myArea').transition().duration(1500).attr('d', line);
     }
 
     // If user double click, reinitialize the chart
     svg.on('dblclick', function () {
         x.domain(d3.extent(marketData, (d) => d.date));
         gx.transition().call(d3.axisBottom(x));
-        area.select('.myArea').transition().attr('d', areaGenerator);
+        area.select('.myArea').transition().attr('d', line);
     });
 
     svg.append('g').call(xAxis, x, height);
