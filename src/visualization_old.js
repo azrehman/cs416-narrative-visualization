@@ -29,8 +29,8 @@ const data = d3
             .select('body')
             .append('div')
             .attr('class', 'nextButton');
-        d3.select(id).html = '';
-        d3.select('body').append(() => plot(marketsData['NASDAQ']));
+        // d3.select(id).html = '';
+        // d3.select('body').append(() => plot(marketsData['NASDAQ']));
         // d3.select('body').append(() => plot(marketsData['EUR']));
     })
     .catch((error) => {
@@ -45,19 +45,24 @@ const height = 600;
 const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
 function plot(marketData) {
-    // marketData.sort((a, b) => a.date - b.date);
+    console.log('hello world');
 
     // x position scale
-    const x = d3
-        .scaleUtc()
-        .domain(d3.extent(marketData, (d) => d.date))
-        .range([margin.left, width - margin.right]);
+    const x = d3.scaleUtc(
+        d3.extent(marketData, (d) => d.date),
+        [margin.left, width - margin.right]
+    );
     // y position scale
-    const y = d3
-        .scaleLinear()
-        .domain([0, d3.max(marketData, (d) => d.close)])
-        .nice()
-        .range([height - margin.bottom, margin.top]);
+    const y = d3.scaleLinear(
+        [0, d3.max(marketData, (d) => d.close)],
+        [height - margin.bottom, margin.top]
+    );
+
+    // line generator
+    // const line = d3
+    //     .line()
+    //     .x((d) => x(d.date))
+    //     .y((d) => y(d.close));
 
     // create svg
     const svg = d3
@@ -83,15 +88,6 @@ function plot(marketData) {
                 .axisBottom(x)
                 .ticks(width / 80)
                 .tickSizeOuter(0)
-        )
-        .call((g) =>
-            g
-                .append('text')
-                .attr('x', margin.left)
-                .attr('y', 15)
-                .attr('fill', 'currentColor')
-                .attr('text-anchor', 'start')
-                .text('Date')
         );
 
     // add y axis
@@ -116,18 +112,95 @@ function plot(marketData) {
                 .text('↑ Daily Close ($)')
         );
 
-    // line generator
-    const line = d3
-        .line()
-        .x((d) => x(d.date))
-        .y((d) => y(d.close));
-
     // add line to path
-    svg.append('path')
+    // const path = svg
+    //     .append('path')
+    //     .attr('fill', 'none')
+    //     .attr('stroke', 'steelblue')
+    //     .attr('stroke-width', 1.5)
+    //     .attr('d', line(marketData));
+    // path.transition().delay(1000);
+
+    // Add a clipPath: everything out of this area won't be drawn.
+    var clip = svg
+        .append('defs')
+        .append('svg:clipPath')
+        .attr('id', 'clip')
+        .append('svg:rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('x', 0)
+        .attr('y', 0);
+
+    // Add brushing
+    var brush = d3
+        .brushX() // Add the brush feature using the d3.brush function
+        .extent([
+            [0, 0],
+            [width, height],
+        ]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+        .on('end', updateChart);
+
+    var line = svg.append('g').attr('clip-path', 'url(#clip)');
+    // Add the line
+    line.append('path')
+        .datum(data)
+        .attr('class', 'line') // I add the class line to be able to modify this line later on.
         .attr('fill', 'none')
         .attr('stroke', 'steelblue')
         .attr('stroke-width', 1.5)
-        .attr('d', line(marketData));
+        .attr(
+            'd',
+            d3
+                .line()
+                .x(function (d) {
+                    return x(d.date);
+                })
+                .y(function (d) {
+                    return y(d.value);
+                })
+        );
+
+    // Add the brushing
+    line.append('g').attr('class', 'brush').call(brush);
+
+    // A function that set idleTimeOut to null
+    var idleTimeout;
+    function idled() {
+        idleTimeout = null;
+    }
+
+    // A function that update the chart for given boundaries
+    function updateChart() {
+        // What are the selected boundaries?
+        extent = d3.event.selection;
+
+        // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        if (!extent) {
+            if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)); // This allows to wait a little bit
+            x.domain([4, 8]);
+        } else {
+            x.domain([x.invert(extent[0]), x.invert(extent[1])]);
+            line.select('.brush').call(brush.move, null); // This remove the grey brush area as soon as the selection has been done
+        }
+
+        // Update axis and line position
+        xAxis.transition().duration(1000).call(d3.axisBottom(x));
+        line.select('.line')
+            .transition()
+            .duration(1000)
+            .attr(
+                'd',
+                d3
+                    .line()
+                    .x(function (d) {
+                        return x(d.date);
+                    })
+                    .y(function (d) {
+                        return y(d.value);
+                    })
+            );
+    }
 
     // create tooltip
     // const tooltip = svg.append('g');
@@ -182,9 +255,9 @@ function plot(marketData) {
             .style('left', `${xPos + 40}px`)
             .style('top', `${yPos + 50}px`)
             .html(
-                `<strong>Close:</strong> ${
-                    d.close !== undefined ? formatValue(d.close) : 'N/A'
-                }<br><strong>Date:</strong> ${formatDate(d.date)}`
+                `<strong>Date:</strong> ${d.date.toLocaleDateString()}<br><strong>Close:</strong> ${
+                    d.close !== undefined ? '$' + d.close.toFixed(2) : 'N/A'
+                }`
             );
     }
 
@@ -193,6 +266,7 @@ function plot(marketData) {
 
         tooltip.style('display', 'none');
     }
+    // Add the event listeners that show or hide the tooltip.
 
     return svg.node();
 }

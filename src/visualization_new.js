@@ -52,12 +52,17 @@ function plot(marketData) {
         .scaleUtc()
         .domain(d3.extent(marketData, (d) => d.date))
         .range([margin.left, width - margin.right]);
+
+    const xcopy = x.copy(); // for zooming
+
     // y position scale
     const y = d3
         .scaleLinear()
         .domain([0, d3.max(marketData, (d) => d.close)])
         .nice()
         .range([height - margin.bottom, margin.top]);
+
+    const ycopy = y.copy(); // for zooming
 
     // create svg
     const svg = d3
@@ -75,46 +80,51 @@ function plot(marketData) {
         .on('mouseleave', mouseleft);
     // .on('touchstart', (event) => event.preventDefault());
 
+    const xAxis = (g, x) =>
+        g
+            .attr('transform', `translate(0,${height - margin.bottom})`)
+            .call(
+                d3
+                    .axisBottom(x)
+                    .ticks(width / 80)
+                    .tickSizeOuter(0)
+            )
+            .call((g) =>
+                g
+                    .append('text')
+                    .attr('x', margin.left)
+                    .attr('y', 15)
+                    .attr('fill', 'currentColor')
+                    .attr('text-anchor', 'start')
+                    .text('Date')
+            );
     // add x axis
-    svg.append('g')
-        .attr('transform', `translate(0,${height - margin.bottom})`)
-        .call(
-            d3
-                .axisBottom(x)
-                .ticks(width / 80)
-                .tickSizeOuter(0)
-        )
-        .call((g) =>
-            g
-                .append('text')
-                .attr('x', margin.left)
-                .attr('y', 15)
-                .attr('fill', 'currentColor')
-                .attr('text-anchor', 'start')
-                .text('Date')
-        );
+    const gx = svg.append('g').call(xAxis, x);
+
+    const yAxis = (g, y) =>
+        g
+            .attr('transform', `translate(${margin.left},0)`)
+            .call(d3.axisLeft(y).ticks(height / 40))
+            .call((g) => g.select('.domain').remove())
+            .call((g) =>
+                g
+                    .selectAll('.tick line')
+                    .clone()
+                    .attr('x2', width - margin.left - margin.right)
+                    .attr('stroke-opacity', 0.1)
+            )
+            .call((g) =>
+                g
+                    .append('text')
+                    .attr('x', -margin.left)
+                    .attr('y', 10)
+                    .attr('fill', 'currentColor')
+                    .attr('text-anchor', 'start')
+                    .text('↑ Daily Close ($)')
+            );
 
     // add y axis
-    svg.append('g')
-        .attr('transform', `translate(${margin.left},0)`)
-        .call(d3.axisLeft(y).ticks(height / 40))
-        .call((g) => g.select('.domain').remove())
-        .call((g) =>
-            g
-                .selectAll('.tick line')
-                .clone()
-                .attr('x2', width - margin.left - margin.right)
-                .attr('stroke-opacity', 0.1)
-        )
-        .call((g) =>
-            g
-                .append('text')
-                .attr('x', -margin.left)
-                .attr('y', 10)
-                .attr('fill', 'currentColor')
-                .attr('text-anchor', 'start')
-                .text('↑ Daily Close ($)')
-        );
+    const gy = svg.append('g').call(yAxis, y);
 
     // line generator
     const line = d3
@@ -123,11 +133,44 @@ function plot(marketData) {
         .y((d) => y(d.close));
 
     // add line to path
-    svg.append('path')
+    const path = svg
+        .append('path')
         .attr('fill', 'none')
         .attr('stroke', 'steelblue')
         .attr('stroke-width', 1.5)
         .attr('d', line(marketData));
+
+    const zoom = d3
+        .zoom()
+        .scaleExtent([1, 32])
+        .extent([
+            [margin.left, 0],
+            [width - margin.right, height],
+        ])
+        .translateExtent([
+            [margin.left, -Infinity],
+            [width - margin.right, Infinity],
+        ])
+        .on('zoom', zoomed);
+    function zoomed(event) {
+        const xz = event.transform.rescaleX(x);
+        const yz = event.transform.rescaleY(y);
+
+        // update domain on copied x scale so hover function can find the correct point
+        xcopy.domain(xz.domain());
+        ycopy.domain(yz.domain());
+
+        // redraw paths with new x zoomed scale
+        // path.attr('d', (d) => line(d.values, xz, yz));
+        // find and redraw closest point path
+        const pointer = d3.pointer(event, this);
+        if (event.sourceEvent.type === 'mousemove') {
+            highlightPoint(pointer, svg, path);
+        }
+        gx.call(xAxis, xz);
+        gy.call(yAxis, yz);
+    }
+    svg.call(zoom);
 
     // create tooltip
     // const tooltip = svg.append('g');
