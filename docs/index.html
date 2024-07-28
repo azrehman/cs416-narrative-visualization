@@ -1,57 +1,17 @@
 <!DOCTYPE html>
+<meta charset="utf-8" />
+
 <head>
     cs411 narrative visualization
 </head>
 <div id="container"></div>
-<script type="module">
-    console.log('hello');
-    import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
+<body>
+    <!DOCTYPE html>
 
-    const dateParser = d3.timeParse('%Y-%m-%d');
-
-    const data = d3
-        .csv('../data/indexProcessed.csv', (d) => {
-            return {
-                index: d.Index,
-                date: dateParser(d.Date),
-                close: +d.CloseUSD,
-            };
-        })
-        .then((data) => {
-            const marketsData = {
-                NYSE: data.filter(({ index }) => index == 'NYA'), // New York Stock Exchange
-                NASDAQ: data.filter(({ index }) => index == 'IXIC'), // NASDAQ
-                HKSE: data.filter(({ index }) => index == 'HSI'), // Hong Kong Stock Exchange
-                TSE: data.filter(({ index }) => index == 'N225'), // Tokyo Stock Exchange
-                EUR: data.filter(({ index }) => index == 'N100'), // Euronext
-                NSEI: data.filter(({ index }) => index == 'NSEI'), // National Stock Exchange of India
-            };
-
-            // const marketsData = d3.nest().key(d => d.index).entries(data); // every index
-
-            plot(marketsData);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-
-    console.log('bye');
-    // load data
-
-    // const dataa = await d3;
-    // .csv('../data/indexProcessed.csv')
-    // .then((data) => {
-    //   console.log(typeof data);
-    //   console.log(data);
-    // })
-
-    // Declare the chart dimensions and margins.
-    // const width = 640;
-    // const height = 400;
-    // const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-
-    // TODO
-    // tell story about covid bad for markets
-    // each stock exchange at a time
-    // in the end let user plot chosen stock exchange for a given time period?
-</script>
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v6.js"></script>
+    <!-- Load d3-annotation -->
+    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+    <!-- Load source code -->
+    <script src="../src/visualization.js" type="module"></script>
+</body>
