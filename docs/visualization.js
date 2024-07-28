@@ -382,7 +382,7 @@ function plot(marketData, title = '') {
     svg.append('rect');
 
     function mousemoved(event) {
-        const [xCoord] = d3.pointer(event, this);
+        const [xCoord, yCoord] = d3.pointer(event, this);
         const bisectDate = d3.bisector((d) => d.date).left;
         const x0 = x.invert(xCoord);
         const i = bisectDate(marketData, x0, 1);
@@ -401,10 +401,7 @@ function plot(marketData, title = '') {
             .attr('class', 'tooltip')
             .style('display', 'block')
             .style('left', `${xPos + 25}px`)
-            .style(
-                'top',
-                `${document.getElementById('clip').clientHeight + yPos}px`
-            )
+            .style('top', `${yCoord}px`)
             .attr('position', 'fixed')
             .html(
                 `<strong>Close:</strong> ${
