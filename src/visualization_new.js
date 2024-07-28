@@ -83,7 +83,7 @@ function plot(marketData) {
             .call(
                 d3
                     .axisBottom(x)
-                    .ticks(width / 80)
+                    .ticks(width / 200)
                     .tickSizeOuter(0)
             )
             .call((g) =>
@@ -261,18 +261,29 @@ function plot(marketData) {
         }
 
         // Update axis and area position
-        gx.transition().duration(1500).call(d3.axisBottom(x));
+        gx.transition()
+            .duration(1500)
+            .call(
+                d3
+                    .axisBottom(x)
+                    .ticks(width / 200)
+                    .tickSizeOuter(0)
+            );
         area.select('.myArea').transition().duration(1500).attr('d', line);
     }
 
     // If user double click, reinitialize the chart
     svg.on('dblclick', function () {
         x.domain(d3.extent(marketData, (d) => d.date));
-        gx.transition().call(d3.axisBottom(x));
+        gx.transition().call(
+            d3
+                .axisBottom(x)
+                .ticks(width / 200)
+                .tickSizeOuter(0)
+        );
+
         area.select('.myArea').transition().attr('d', line);
     });
-
-    svg.append('g').call(xAxis, x, height);
 
     return svg.node();
 }
