@@ -11,6 +11,154 @@
     />
 </head>
 
+<body>
+    <!DOCTYPE html>
+    <div id="container">
+        <div id="tooltip">
+            <div class="close"></div>
+            <div class="date"></div>
+        </div>
+    </div>
+
+    <h1>CS411 Narrative Visualization</h1>
+    <h2>Explore Stock Markets Around The World 🌎</h2>
+    <p>
+        Despite how connected the global economy is, stock exchanges based in
+        different countries can experience remarkably different rates of
+        <span style="color: green; font-weight: bold"> growth</span> and
+        <span style="color: red; font-weight: bold"> decline</span>.
+        <br />
+        This is due to underlying <i>social</i>, <i>political</i>, and
+        <i>environmental</i> conditions affecting markets based in different
+        regions.
+        <br />
+        This website provides a way to interactively explore stock market data
+        of different exchanges.
+    </p>
+
+    <p>
+        <br />
+        <i>Click on the <b>buttons</b> below to progress.</i>
+    </p>
+    <button id="Page1">Explore: New York 🇺🇸</button>
+    <button id="Page2">Explore: Tokyo 🇯🇵</button>
+    <button id="Page3">Explore: Hong Kong 🇭🇰</button>
+    <button id="Page4">Explore: Europe 🇪🇺</button>
+    <button id="Page5">Free Explore</button>
+    <p></p>
+    <select id="selectButton" title="Explore">
+        Explore All
+    </select>
+
+    <div id="Page1Div">
+        <p>
+            The
+            <a
+                href="https://www.investopedia.com/terms/n/nyse.asp"
+                target="_blank"
+            >
+                New York Stock Exchange</a
+            >, nicknamed "The Big Board",
+            <br />
+            is located in the Financial District of Lower Manhattan in New York
+            City. <br />
+            It is the largest stock exchange in the world.
+        </p>
+        <br />
+    </div>
+
+    <div id="Page2Div">
+        <p>
+            The
+            <a
+                href="https://www.investopedia.com/terms/t/tokyo.asp"
+                target="_blank"
+                >Tokyo Stock Exchange</a
+            >
+            runup from 1983 to 1990 was unprecedented,
+            <br />
+            in 1990 it accounted for over 60% of the world's stock market
+            capitalization
+            <br />
+            before falling precipitously in value and rank to one of the 4th
+            largest exchange in the world by market capitalization of listed
+            shares.
+        </p>
+        <br />
+    </div>
+
+    <div id="Page3Div">
+        <p>
+            The
+            <a
+                href="https://www.investopedia.com/terms/h/hongkongstockexchange.asp"
+                target="_blank"
+                >Hong Kong Stock Exchange</a
+            >
+            is one of the fastest growing stock exchange in Asia.
+            <br />
+            As of the end of 2020, it had 2,538 listed companies with a combined
+            market capitalization of HK$47 trillion.
+        </p>
+        <br />
+    </div>
+
+    <div id="Page4Div">
+        <p>
+            The
+            <a
+                href="https://www.investopedia.com/terms/e/euronext.asp"
+                target="_blank"
+                >Euronext European Stock Exchange</a
+            >
+            is is the largest stock exchange group in Europe, and one of the
+            largest in the world.
+            <br />
+            Over the years, it has since merged with several other exchanges,
+            most notably the New York Stock Exchange (NYSE).
+        </p>
+        <br />
+    </div>
+
+    <div id="Page5Div">
+        <p></p>
+
+        <p>
+            Congratulations on exploring different stock exchanges around the
+            world!
+            <br />
+            You are now free to visualize any of the available stock exchanges
+            using the dropdown above.
+        </p>
+        <p></p>
+        <p>
+            Data source:
+            <a
+                href="https://www.kaggle.com/datasets/mattiuzc/stock-exchange-data?select=indexProcessed.csv"
+                target="_blank"
+                >Kaggle / Yahoo Finance</a
+            >
+            <br />
+
+            Author:
+            <a
+                href="https://github.com/azrehman/cs416-narrative-visualization"
+                target="_blank"
+            >
+                Abdullah Rehman (netid: arehman3)</a
+            >
+        </p>
+        <br />
+    </div>
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v7.js"></script>
+    <!-- Load d3-annotation -->
+    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+    <!-- Load source code -->
+    <script src="visualization.js"></script>
+</body>
+
 <style>
     #Page1Div {
         display: none;
@@ -246,151 +394,3 @@
         font-weight: bold;
     }
 </style>
-
-<body>
-    <!DOCTYPE html>
-    <div id="container">
-        <div id="tooltip">
-            <div class="close"></div>
-            <div class="date"></div>
-        </div>
-    </div>
-
-    <h1>CS411 Narrative Visualization</h1>
-    <h2>Explore Stock Markets Around The World 🌎</h2>
-    <p>
-        Despite how connected the global economy is, stock exchanges based in
-        different countries can experience remarkably different rates of
-        <span style="color: green; font-weight: bold"> growth</span> and
-        <span style="color: red; font-weight: bold"> decline</span>.
-        <br />
-        This is due to underlying <i>social</i>, <i>political</i>, and
-        <i>environmental</i> conditions affecting markets based in different
-        regions.
-        <br />
-        This website provides a way to interactively explore stock market data
-        of different exchanges.
-    </p>
-
-    <p>
-        <br />
-        <i>Click on the <b>buttons</b> below to progress.</i>
-    </p>
-    <button id="Page1">Explore: New York 🇺🇸</button>
-    <button id="Page2">Explore: Tokyo 🇯🇵</button>
-    <button id="Page3">Explore: Hong Kong 🇭🇰</button>
-    <button id="Page4">Explore: Europe 🇪🇺</button>
-    <button id="Page5">Free Explore</button>
-    <p></p>
-    <select id="selectButton" title="Explore">
-        Explore All
-    </select>
-
-    <div id="Page1Div">
-        <p>
-            The
-            <a
-                href="https://www.investopedia.com/terms/n/nyse.asp"
-                target="_blank"
-            >
-                New York Stock Exchange</a
-            >, nicknamed "The Big Board",
-            <br />
-            is located in the Financial District of Lower Manhattan in New York
-            City. <br />
-            It is the largest stock exchange in the world.
-        </p>
-        <br />
-    </div>
-
-    <div id="Page2Div">
-        <p>
-            The
-            <a
-                href="https://www.investopedia.com/terms/t/tokyo.asp"
-                target="_blank"
-                >Tokyo Stock Exchange</a
-            >
-            runup from 1983 to 1990 was unprecedented,
-            <br />
-            in 1990 it accounted for over 60% of the world's stock market
-            capitalization
-            <br />
-            before falling precipitously in value and rank to one of the 4th
-            largest exchange in the world by market capitalization of listed
-            shares.
-        </p>
-        <br />
-    </div>
-
-    <div id="Page3Div">
-        <p>
-            The
-            <a
-                href="https://www.investopedia.com/terms/h/hongkongstockexchange.asp"
-                target="_blank"
-                >Hong Kong Stock Exchange</a
-            >
-            is one of the fastest growing stock exchange in Asia.
-            <br />
-            As of the end of 2020, it had 2,538 listed companies with a combined
-            market capitalization of HK$47 trillion.
-        </p>
-        <br />
-    </div>
-
-    <div id="Page4Div">
-        <p>
-            The
-            <a
-                href="https://www.investopedia.com/terms/e/euronext.asp"
-                target="_blank"
-                >Euronext European Stock Exchange</a
-            >
-            is is the largest stock exchange group in Europe, and one of the
-            largest in the world.
-            <br />
-            Over the years, it has since merged with several other exchanges,
-            most notably the New York Stock Exchange (NYSE).
-        </p>
-        <br />
-    </div>
-
-    <div id="Page5Div">
-        <p></p>
-
-        <p>
-            Congratulations on exploring different stock exchanges around the
-            world!
-            <br />
-            You are now free to visualize any of the available stock exchanges
-            using the dropdown above.
-        </p>
-        <p></p>
-        <p>
-            Data source:
-            <a
-                href="https://www.kaggle.com/datasets/mattiuzc/stock-exchange-data?select=indexProcessed.csv"
-                target="_blank"
-                >Kaggle / Yahoo Finance</a
-            >
-            <br />
-
-            Author:
-            <a
-                href="https://github.com/azrehman/cs416-narrative-visualization"
-                target="_blank"
-            >
-                Abdullah Rehman (netid: arehman3)</a
-            >
-        </p>
-        <br />
-    </div>
-
-    <!-- Load d3.js -->
-    <script src="https://d3js.org/d3.v7.js"></script>
-    <!-- Load d3-annotation -->
-    <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
-    <!-- Load source code -->
-    <script src="visualization.js"></script>
-</body>

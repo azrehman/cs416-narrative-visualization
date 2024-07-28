@@ -1,11 +1,7 @@
-// import * as d3 from 'https://cdn.jsdelivr.net/npm/d3@7/+esm';
-
+// convert string date to Date object
 const dateParser = d3.timeParse('%Y-%m-%d');
 
-// load data
-
-var loc = window.location.pathname;
-var dir = loc.substring(0, loc.lastIndexOf('/'));
+// load data - aync
 const data = d3
     .csv(
         'https://raw.githubusercontent.com/azrehman/cs416-narrative-visualization/main/data/indexProcessed.csv',
@@ -19,7 +15,7 @@ const data = d3
     )
     .then((data) => {
         // create array for each index
-        // const marketsData = d3.nest().key(d => d.index).entries(data); // every index
+        // const marketsData = d3.group().key(d => d.index).entries(data); // every index
         const marketsData = {
             NYSE: data.filter(({ index }) => index == 'NYA'), // New York Stock Exchange
             NASDAQ: data.filter(({ index }) => index == 'IXIC'), // NASDAQ
@@ -35,6 +31,7 @@ const data = d3
             SOUTHAFRICA: data.filter(({ index }) => index == 'J203.JO'), // National Stock Exchange of India
         };
 
+        // page 1 (new york)
         d3.select('#Page1').on('click', () => {
             d3.selectAll('svg').remove();
 
@@ -52,6 +49,7 @@ const data = d3
             d3.select('#Page2').style('visibility', 'visible');
         });
 
+        // page 2 (tokyo)
         d3.select('#Page2').on('click', () => {
             d3.selectAll('svg').remove();
 
@@ -69,6 +67,8 @@ const data = d3
 
             d3.select('#Page3').style('visibility', 'visible');
         });
+
+        // page 3 (hong kong)
         d3.select('#Page3').on('click', () => {
             d3.selectAll('svg').remove();
 
@@ -89,6 +89,8 @@ const data = d3
 
             d3.select('#Page4').style('visibility', 'visible');
         });
+
+        // page 4 (europe)
         d3.select('#Page4').on('click', () => {
             d3.selectAll('svg').remove();
 
@@ -109,6 +111,7 @@ const data = d3
             d3.select('#Page5').style('visibility', 'visible');
         });
 
+        // page 5 (free / multiple)
         d3.select('#Page5').on('click', () => {
             d3.selectAll('svg').remove();
             d3.selectAll('option').remove();
@@ -134,22 +137,21 @@ const data = d3
 
             d3.select('#selectButton').on('change', function (d) {
                 selectedGroup = this.value;
-                d3.selectAll('svg').remove();
+                // allow multiple plots on Free Explore (Page5) - uncomment below line to only plot one chart
+                // d3.selectAll('svg').remove();
                 if (selectedGroup in marketsData) {
                     d3.select('body').append(() =>
                         plot(marketsData[selectedGroup], selectedGroup)
                     );
                 }
             });
-
-            // d3.select('#Page5').style('visibility', 'visible');
         });
     })
     .catch((error) => {
         console.log(error);
     });
 
-// Declare the chart dimensions and margins.
+// set chart dimensions and margins.
 const width = 900;
 const height = 500;
 const margin = { top: 20, right: 30, bottom: 30, left: 50 };
@@ -201,6 +203,7 @@ function plot(marketData, title = '') {
         .style('text-decoration', 'underline')
         .text(title);
 
+    // create x axis
     const xAxis = (g, x) =>
         g
             .attr('transform', `translate(0,${height - margin.bottom})`)
@@ -222,6 +225,7 @@ function plot(marketData, title = '') {
     // add x axis
     const gx = svg.append('g').call(xAxis, x);
 
+    // create y axis
     const yAxis = (g, y) =>
         g
             .attr('transform', `translate(${margin.left},0)`)
@@ -246,13 +250,14 @@ function plot(marketData, title = '') {
     // add y axis
     const gy = svg.append('g').call(yAxis, y);
 
+    // modified from https://d3-annotation.susielu.com/#examples
     const annotations = [
         {
             note: {
                 title: 'Black Tuesday 1987',
                 lineType: 'none',
                 align: 'middle',
-                wrap: 150, //custom text wrapping
+                wrap: 150,
             },
             subject: {
                 height: height - margin.top - margin.bottom,
@@ -260,8 +265,7 @@ function plot(marketData, title = '') {
             },
             type: d3.annotationCalloutRect,
             y: margin.top,
-            disable: ['connector'], // doesn't draw the connector
-            //can pass "subject" "note" and "connector" as valid options
+            disable: ['connector'],
             dx: (x(new Date('12/1/1987')) - x(new Date('10/20/1987'))) / 2,
             data: { x: '10/20/1987' },
         },
@@ -270,7 +274,7 @@ function plot(marketData, title = '') {
                 title: '2007–2008 Financial Crisis',
                 lineType: 'none',
                 align: 'middle',
-                wrap: 150, //custom text wrapping
+                wrap: 150,
             },
             subject: {
                 height: height - margin.top - margin.bottom,
@@ -278,8 +282,7 @@ function plot(marketData, title = '') {
             },
             type: d3.annotationCalloutRect,
             y: margin.top,
-            disable: ['connector'], // doesn't draw the connector
-            //can pass "subject" "note" and "connector" as valid options
+            disable: ['connector'],
             dx: (x(new Date('4/1/2009')) - x(new Date('12/1/2007'))) / 2,
             data: { x: '12/1/2007' },
         },
@@ -289,7 +292,7 @@ function plot(marketData, title = '') {
                 title: 'DotCom + 9/11',
                 lineType: 'none',
                 align: 'middle',
-                wrap: 150, //custom text wrapping
+                wrap: 150,
             },
             subject: {
                 height: height - margin.top - margin.bottom,
@@ -297,8 +300,7 @@ function plot(marketData, title = '') {
             },
             type: d3.annotationCalloutRect,
             y: margin.top,
-            disable: ['connector'], // doesn't draw the connector
-            //can pass "subject" "note" and "connector" as valid options
+            disable: ['connector'],
             dx: (x(new Date('01/01/2001')) - x(new Date('01/01/2003'))) / 2,
             data: { x: '01/01/2003' },
         },
@@ -308,7 +310,7 @@ function plot(marketData, title = '') {
                 title: 'Covid-19',
                 lineType: 'none',
                 align: 'middle',
-                wrap: 150, //custom text wrapping
+                wrap: 150,
             },
             subject: {
                 height: height - margin.top - margin.bottom,
@@ -316,8 +318,7 @@ function plot(marketData, title = '') {
             },
             type: d3.annotationCalloutRect,
             y: margin.top,
-            disable: ['connector'], // doesn't draw the connector
-            //can pass "subject" "note" and "connector" as valid options
+            disable: ['connector'],
             dx: (x(new Date('03/01/2019')) - x(new Date('07/01/2021'))) / 2,
             data: { x: '07/01/2021' },
         },
@@ -348,7 +349,7 @@ function plot(marketData, title = '') {
         .x((d) => x(d.date))
         .y((d) => y(d.close));
 
-    // create tooltip
+    // tooltip helpers
     function formatValue(value) {
         return value.toLocaleString('en', {
             style: 'currency',
@@ -364,6 +365,8 @@ function plot(marketData, title = '') {
         });
     }
 
+    // create tooltip
+
     // circle pointer for tooltip
     const tooltipPointer = svg
         .append('circle')
@@ -374,7 +377,6 @@ function plot(marketData, title = '') {
         .style('pointer-events', 'none');
 
     // create tooltip div
-    // const tooltip = d3.select('body').append('div').attr('class', 'tooltip');
     const tooltip = d3.select('#tooltip');
 
     svg.append('rect');
@@ -394,7 +396,7 @@ function plot(marketData, title = '') {
 
         tooltipPointer.transition().duration(50).attr('r', 5);
 
-        // add in  our tooltip
+        // add in tooltip
         tooltip
             .attr('class', 'tooltip')
             .style('display', 'block')
@@ -406,7 +408,6 @@ function plot(marketData, title = '') {
                     d.close !== undefined ? formatValue(d.close) : 'N/A'
                 }<br><strong>Date:</strong> ${formatDate(d.date)}`
             );
-        // tooltip.select('.close').text('test');
     }
 
     function mouseleft() {
@@ -436,10 +437,10 @@ function plot(marketData, title = '') {
 
     const plot = svg.append('g').attr('clip-path', 'url(#clip)');
 
-    // Add the line
+    // plot line
     plot.append('path')
         .datum(marketData)
-        .attr('class', 'myPlot') // I add the class myPlot to be able to modify it later on.
+        .attr('class', 'myPlot')
         .attr('fill', 'none')
         .attr('stroke', 'steelblue')
         .attr('stroke-width', 1.5)
@@ -447,18 +448,16 @@ function plot(marketData, title = '') {
 
     plot.append('g').attr('class', 'brush').call(brush);
 
-    // A function that set idleTimeOut to null
     let idleTimeout;
     const idled = () => {
         idleTimeout = null;
     };
 
-    // A function that update the chart for given boundaries
+    // update chart to brush zoom selection
     function updateChart(event) {
-        // What are the selected boundaries?
         let extent = event.selection;
 
-        // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        // if no selection then reset zoom window
         if (!extent) {
             if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)); // This allows to wait a little bit
             // x.domain([4, 8]);
@@ -466,6 +465,7 @@ function plot(marketData, title = '') {
         } else {
             // d3.annotations.remove();
             d3.select('.annotation-group').remove();
+            // reset zoom if user zooms in too much
             const sameDay = (d1, d2) => {
                 return (
                     d1.getFullYear() === d2.getFullYear() &&
@@ -481,7 +481,7 @@ function plot(marketData, title = '') {
             plot.select('.brush').call(brush.move, null);
         }
 
-        // Update axis and line position
+        // update axis and line plot when zooming
         gx.transition()
             .duration(1500)
             .call(
@@ -493,7 +493,7 @@ function plot(marketData, title = '') {
         plot.select('.myPlot').transition().duration(1500).attr('d', line);
     }
 
-    // If user double click, reinitialize the chart
+    // reset zoom on double click
     svg.on('dblclick', function () {
         x.domain(d3.extent(marketData, (d) => d.date));
         gx.transition().call(
@@ -508,10 +508,3 @@ function plot(marketData, title = '') {
 
     return svg.node();
 }
-
-// TODO
-// tell story about covid bad for markets
-// each stock exchange at a time
-// in the end let user plot chosen stock exchange for a given time period?
-// tooltip exact day and price hover - click to open day on yahoo finance?
-// annotation peak and valley of market
