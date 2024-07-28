@@ -12,6 +12,123 @@
 </head>
 
 <style>
+<!-- HTML !-->
+
+    #Page1Div {
+        display: block;
+    }
+    #Page2Div {
+        display: none;
+    }
+    #Page3Div {
+        display: none;
+    }
+    #Page4Div {
+        display: none;
+    }
+    #Page5Div {
+        display: none;
+    }
+    #Page1 {
+       visibility: visible;
+
+    }
+    #Page2 {
+       visibility: hidden;
+
+    }
+    #Page3 {
+        visibility: hidden;
+    }
+    #Page4 {
+        visibility: hidden;
+    }
+    #Page5 {
+        visibility: hidden;
+    }
+    #selectButton {
+        display: none;
+        background-color: transparent;
+        border: 0.125em solid #ad1639;
+        border-radius: 0.9375em;
+        box-sizing: border-box;
+        color: #ad1639;
+        cursor: pointer;
+        font-family: Lato,Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        font-size: 14px;
+        font-weight: 550;
+        line-height: normal;
+        margin: 0;
+        min-height: 3.75em;
+        min-width: 0;
+        outline: none;
+        padding: 1em 2.3em;
+        text-align: left;
+        text-decoration: none;
+        transition: all 500ms cubic-bezier(.23, 1, 0.32, 1);
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        will-change: transform;
+    }
+    #selectButton:hover {
+        color: black;
+        border: 0.125em solid black;
+
+        background-color:#ad1639;
+        box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+        transform: translateY(-2px);
+    }
+
+    #selectButton:active {
+        box-shadow: none;
+        transform: translateY(0);
+    }
+
+
+    button {
+        appearance: none;
+        background-color: transparent;
+        border: 0.125em solid #1A1A1A;
+        border-radius: 0.9375em;
+        box-sizing: border-box;
+        color: #3B3B3B;
+        cursor: pointer;
+        display: inline-block;
+        font-family: Lato,Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        font-size: 14px;
+        font-weight: 550;
+        line-height: normal;
+        margin: 0;
+        min-height: 3.75em;
+        min-width: 0;
+        outline: none;
+        padding: 1em 2.3em;
+        text-align: center;
+        text-decoration: none;
+        transition: all 500ms cubic-bezier(.23, 1, 0.32, 1);
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        will-change: transform;
+    }
+
+    button:disabled {
+        pointer-events: none;
+    }
+
+    button:hover {
+        color: #fff;
+        background-color: steelblue;
+        box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+        transform: translateY(-2px);
+    }
+
+    button:active {
+        box-shadow: none;
+        transform: translateY(0);
+    }
+      
     body {
         background-color: #f2f2f2;
         font-family: 'Lato';
@@ -123,6 +240,7 @@
         font-weight: bold;
     }
 </style>
+
 <body>
     <!DOCTYPE html>
     <div id="container">
@@ -131,10 +249,42 @@
             <div class="date"></div>
         </div>
     </div>
-    <button id="Page1">Page 1</button>
-    <button id="Page2">Page 2</button>
-    <button id="Page3">Page 3</button>
-    <button id="Page4">Page 4</button>
+
+    <h2>CS411 Narrative Visualization</h2>
+    <p>The stock market varies for different coutnries <br> this is cool yo.</p>
+    <P>new para</P>
+    <button id="Page1" class="button">Page 1 🇺🇸</button>
+    <button id="Page2">Page 2 🇯🇵</button>
+    <button id="Page3">Page 3 🇭🇰</button>
+    <button id="Page4">Page 4 🇪🇺</button>
+    <button id="Page5">Page 5 🇪🇺</button>
+    <p></p>
+    <select id="selectButton" title="Explore">Explore All</select>
+
+    <div id="Page1Div"
+    <p> Hello everyone</p>
+    <p> Welcome 🇺🇸</p>
+    </div>
+
+    <div id="Page2Div"
+    <p> Hello everyone</p>
+    <p> Welcome to page 2</p>
+    </div>
+
+    <div id="Page3Div"
+    <p> Hello everyone</p>
+    <p> Welcome to page 3</p>
+    </div>
+
+    <div id="Page4Div"
+    <p> Hello everyone</p>
+    <p> Welcome to page 4</p>
+    </div>
+
+    <div id="Page5Div"
+    <p> <br> View any market</p>
+    <p> Welcome to page 5</p>
+    </div>
 
     <!-- Load d3.js -->
     <script src="https://d3js.org/d3.v7.js"></script>

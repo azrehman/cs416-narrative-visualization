@@ -23,45 +23,126 @@ const data = d3
         const marketsData = {
             NYSE: data.filter(({ index }) => index == 'NYA'), // New York Stock Exchange
             NASDAQ: data.filter(({ index }) => index == 'IXIC'), // NASDAQ
-            HKSE: data.filter(({ index }) => index == 'HSI'), // Hong Kong Stock Exchange
-            TSE: data.filter(({ index }) => index == 'N225'), // Tokyo Stock Exchange
-            EUR: data.filter(({ index }) => index == 'N100'), // Euronext
-            NSEI: data.filter(({ index }) => index == 'NSEI'), // National Stock Exchange of India
+            HONGKONG: data.filter(({ index }) => index == 'HSI'), // Hong Kong Stock Exchange
+            TOKYO: data.filter(({ index }) => index == 'N225'), // Tokyo Stock Exchange
+            EURONEXT: data.filter(({ index }) => index == 'N100'), // Euronext
+            INDIA: data.filter(({ index }) => index == 'NSEI'), // National Stock Exchange of India
+            SHANGHAI: data.filter(({ index }) => index == '000001.SS'), // National Stock Exchange of India
+            TORONTO: data.filter(({ index }) => index == 'GSPTSE'), // National Stock Exchange of India
+            GERMANY: data.filter(({ index }) => index == 'GDAXI'), // National Stock Exchange of India
+            SWISS: data.filter(({ index }) => index == 'SSMI'), // National Stock Exchange of India
+            TAIWAN: data.filter(({ index }) => index == 'TWII'), // National Stock Exchange of India
+            SOUTHAFRICA: data.filter(({ index }) => index == 'J203.JO'), // National Stock Exchange of India
         };
 
         d3.select('#Page1').on('click', () => {
             d3.selectAll('svg').remove();
+
+            d3.select('#Page1Div').style('display', 'block');
+
+            d3.select('#Page2Div').style('display', 'none');
+            d3.select('#Page3Div').style('display', 'none');
+            d3.select('#Page4Div').style('display', 'none');
+            d3.select('#Page5Div').style('display', 'none');
+            d3.select('#selectButton').style('display', 'none');
+
             d3.select('body').append(() =>
                 plot(marketsData['NYSE'], 'New York Stock Exchange (1966-2021)')
             );
+            d3.select('#Page2').style('visibility', 'visible');
         });
 
         d3.select('#Page2').on('click', () => {
             d3.selectAll('svg').remove();
 
+            d3.select('#Page2Div').style('display', 'block');
+
+            d3.select('#Page1Div').style('display', 'none');
+            d3.select('#Page3Div').style('display', 'none');
+            d3.select('#Page4Div').style('display', 'none');
+            d3.select('#Page5Div').style('display', 'none');
+            d3.select('#selectButton').style('display', 'none');
+
             d3.select('body').append(() =>
-                plot(marketsData['TSE'], 'Tokyo Stock Exchange (1966-2021)')
+                plot(marketsData['TOKYO'], 'Tokyo Stock Exchange (1966-2021)')
             );
+
+            d3.select('#Page3').style('visibility', 'visible');
         });
         d3.select('#Page3').on('click', () => {
             d3.selectAll('svg').remove();
 
+            d3.select('#Page3Div').style('display', 'block');
+
+            d3.select('#Page1Div').style('display', 'none');
+            d3.select('#Page2Div').style('display', 'none');
+            d3.select('#Page4Div').style('display', 'none');
+            d3.select('#Page5Div').style('display', 'none');
+            d3.select('#selectButton').style('display', 'none');
+
             d3.select('body').append(() =>
                 plot(
-                    marketsData['HKSE'],
+                    marketsData['HONGKONG'],
                     'Hong Kong Stock Exchange (1987-2021)'
                 )
             );
+
+            d3.select('#Page4').style('visibility', 'visible');
         });
         d3.select('#Page4').on('click', () => {
             d3.selectAll('svg').remove();
 
+            d3.select('#Page4Div').style('display', 'block');
+
+            d3.select('#Page1Div').style('display', 'none');
+            d3.select('#Page2Div').style('display', 'none');
+            d3.select('#Page3Div').style('display', 'none');
+            d3.select('#Page5Div').style('display', 'none');
+            d3.select('#selectButton').style('display', 'none');
+
             d3.select('body').append(() =>
                 plot(
-                    marketsData['EUR'],
+                    marketsData['EURONEXT'],
                     'Euronext European Stock Exchange(2000-2021)'
                 )
             );
+            d3.select('#Page5').style('visibility', 'visible');
+        });
+
+        d3.select('#Page5').on('click', () => {
+            d3.selectAll('svg').remove();
+            d3.selectAll('option').remove();
+            d3.select('#selectButton').style('display', 'none');
+
+            d3.select('#Page5Div').style('display', 'block');
+            d3.select('#selectButton').style('display', 'block');
+
+            d3.select('#Page1Div').style('display', 'none');
+            d3.select('#Page2Div').style('display', 'none');
+            d3.select('#Page3Div').style('display', 'none');
+            d3.select('#Page4Div').style('display', 'none');
+
+            const markets = ['Select'].concat(Object.keys(marketsData));
+
+            d3.select('#selectButton')
+                .selectAll('myOptions')
+                .data(markets)
+                .enter()
+                .append('option')
+                .text((d) => d)
+                .attr('value', (d) => d);
+
+            d3.select('#selectButton').on('change', function (d) {
+                selectedGroup = this.value;
+                d3.selectAll('svg').remove();
+                if (selectedGroup in marketsData) {
+                    d3.select('body').append(() =>
+                        plot(marketsData[selectedGroup], selectedGroup)
+                    );
+                }
+            });
+
+            // d3.select('#Page5').style('visibility', 'visible');
         });
     })
     .catch((error) => {
@@ -70,7 +151,7 @@ const data = d3
 
 // Declare the chart dimensions and margins.
 const width = 900;
-const height = 600;
+const height = 500;
 const margin = { top: 20, right: 30, bottom: 30, left: 40 };
 
 function plot(marketData, title = '') {
@@ -242,13 +323,13 @@ function plot(marketData, title = '') {
         },
     ];
 
-    const type = d3.annotationCustomType(d3.annotationBadge, {
-        subject: { radius: 10 },
-    });
-
     const makeAnnotations = d3
         .annotation()
-        .type(type)
+        .type(
+            d3.annotationCustomType(d3.annotationBadge, {
+                subject: { radius: 10 },
+            })
+        )
         .accessors({
             x: function (d) {
                 return x(new Date(d.x));
@@ -383,6 +464,8 @@ function plot(marketData, title = '') {
             // x.domain([4, 8]);
             x.domain(d3.extent(marketData, (d) => d.date));
         } else {
+            // d3.annotations.remove();
+            d3.select('.annotation-group').remove();
             const sameDay = (d1, d2) => {
                 return (
                     d1.getFullYear() === d2.getFullYear() &&
@@ -395,7 +478,7 @@ function plot(marketData, title = '') {
             } else {
                 x.domain([x.invert(extent[0]), x.invert(extent[1])]);
             }
-            plot.select('.brush').call(brush.move, null); // This remove the grey brush area as soon as the selection has been done
+            plot.select('.brush').call(brush.move, null);
         }
 
         // Update axis and line position
