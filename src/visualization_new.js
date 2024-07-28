@@ -53,8 +53,6 @@ function plot(marketData) {
         .domain(d3.extent(marketData, (d) => d.date))
         .range([margin.left, width - margin.right]);
 
-    const xcopy = x.copy(); // for zooming
-
     // y position scale
     const y = d3
         .scaleLinear()
@@ -62,14 +60,13 @@ function plot(marketData) {
         .nice()
         .range([height - margin.bottom, margin.top]);
 
-    const ycopy = y.copy(); // for zooming
-
     // create svg
     const svg = d3
         .create('svg')
         .attr('viewBox', [0, 0, width, height])
         .attr('width', width)
         .attr('height', height)
+        .style('display', 'block')
         .attr(
             'style',
             'max-width: 100%; height: auto; height: intrinsic; font: 10px sans-serif;'
@@ -131,13 +128,21 @@ function plot(marketData) {
         .x((d) => x(d.date))
         .y((d) => y(d.close));
 
+    // const area = (x, y) =>
+    //     d3
+    //         .area()
+    //         .defined((d) => !isNaN(d.close))
+    //         .x((d) => x(d.date))
+    //         .y0(y(0))
+    //         .y1((d) => y(d.close));
+
     // add line to path
-    const path = svg
-        .append('path')
-        .attr('fill', 'none')
-        .attr('stroke', 'steelblue')
-        .attr('stroke-width', 1.5)
-        .attr('d', line(marketData));
+    // const path = svg
+    //     .append('path')
+    //     .attr('fill', 'none')
+    //     .attr('stroke', 'steelblue')
+    //     .attr('stroke-width', 1.5)
+    //     .attr('d', line(marketData));
 
     // create tooltip
     // const tooltip = svg.append('g');
@@ -163,7 +168,7 @@ function plot(marketData) {
         .attr('r', 0)
         .attr('fill', '#ad1639')
         .style('stroke', 'white')
-        .attr('opacity', 0.6)
+        .attr('opacity', 0.8)
         .style('pointer-events', 'none');
 
     // create tooltip div
@@ -184,7 +189,7 @@ function plot(marketData) {
 
         // Add transition for the circle radius
 
-        circle.transition().duration(50).attr('r', 4);
+        circle.transition().duration(50).attr('r', 5);
 
         // add in  our tooltip
         tooltip
@@ -204,37 +209,81 @@ function plot(marketData) {
         tooltip.style('display', 'none');
     }
 
-    const zoom = d3
-        .zoom()
-        .scaleExtent([1, 32])
+    const clip = svg
+        .append('defs')
+        .append('clipPath')
+        .attr('id', 'clip')
+        .append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('x', 0)
+        .attr('y', 0);
+
+    const brush = d3
+        .brushX()
         .extent([
-            [margin.left, 0],
-            [width - margin.right, height],
+            [margin.left, 0.5],
+            [width - margin.right, height - margin.bottom + 0.5],
         ])
-        .translateExtent([
-            [margin.left, -Infinity],
-            [width - margin.right, Infinity],
-        ])
-        .on('zoom', zoomed);
-    function zoomed(event) {
-        const xz = event.transform.rescaleX(x);
-        const yz = event.transform.rescaleY(y);
+        // .on('brush', brushed)
+        .on('end', updateChart);
 
-        // update domain on copied x scale so hover function can find the correct point
-        xcopy.domain(xz.domain());
-        ycopy.domain(yz.domain());
+    const area = svg.append('g').attr('clip-path', 'url(#clip)');
 
-        // redraw paths with new x zoomed scale
-        // path.attr('d', (d) => line(d.values, xz, yz));
-        // find and redraw closest point path
-        const pointer = d3.pointer(event, this);
-        if (event.sourceEvent.type === 'mousemove') {
-            highlightPoint(pointer, svg, path);
-        }
-        gx.call(xAxis, xz);
-        gy.call(yAxis, yz);
+    const areaGenerator = d3
+        .area()
+        .x((d) => x(d.date))
+        .y0(y(0))
+        .y1((d) => y(d.close));
+
+    // Add the area
+    area.append('path')
+        .datum(marketData)
+        .attr('class', 'myArea') // I add the class myArea to be able to modify it later on.
+        .attr('fill', '#69b3a2')
+        .attr('fill-opacity', 0.5)
+        .attr('stroke', 'black')
+        .attr('stroke-width', 1)
+        .attr('d', areaGenerator);
+
+    area.append('g').attr('class', 'brush').call(brush);
+
+    // A function that set idleTimeOut to null
+    let idleTimeout;
+    function idled() {
+        idleTimeout = null;
     }
-    svg.call(zoom);
+
+    // A function that update the chart for given boundaries
+    function updateChart(event) {
+        // What are the selected boundaries?
+        let extent = event.selection;
+
+        // If no selection, back to initial coordinate. Otherwise, update X axis domain
+        if (!extent) {
+            if (!idleTimeout) return (idleTimeout = setTimeout(idled, 350)); // This allows to wait a little bit
+            x.domain([4, 8]);
+        } else {
+            x.domain([x.invert(extent[0]), x.invert(extent[1])]);
+            area.select('.brush').call(brush.move, null); // This remove the grey brush area as soon as the selection has been done
+        }
+
+        // Update axis and area position
+        gx.transition().duration(1000).call(d3.axisBottom(x));
+        area.select('.myArea')
+            .transition()
+            .duration(1000)
+            .attr('d', areaGenerator);
+    }
+
+    // If user double click, reinitialize the chart
+    svg.on('dblclick', function () {
+        x.domain(d3.extent(marketData, (d) => d.date));
+        gx.transition().call(d3.axisBottom(x));
+        area.select('.myArea').transition().attr('d', areaGenerator);
+    });
+
+    svg.append('g').call(xAxis, x, height);
 
     return svg.node();
 }
