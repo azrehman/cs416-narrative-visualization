@@ -6,15 +6,17 @@ const dateParser = d3.timeParse('%Y-%m-%d');
 
 var loc = window.location.pathname;
 var dir = loc.substring(0, loc.lastIndexOf('/'));
-console.log(loc, dir);
 const data = d3
-    .csv('./indexProcessed.csv', (d) => {
-        return {
-            index: d.Index,
-            date: dateParser(d.Date),
-            close: +d.CloseUSD,
-        };
-    })
+    .csv(
+        'https://raw.githubusercontent.com/azrehman/cs416-narrative-visualization/main/data/indexProcessed.csv',
+        (d) => {
+            return {
+                index: d.Index,
+                date: dateParser(d.Date),
+                close: +d.CloseUSD,
+            };
+        }
+    )
     .then((data) => {
         // create array for each index
         // const marketsData = d3.nest().key(d => d.index).entries(data); // every index
