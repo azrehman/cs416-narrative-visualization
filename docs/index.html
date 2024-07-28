@@ -12,30 +12,32 @@
 </head>
 
 <style>
-<!-- HTML !-->
-
     #Page1Div {
-        display: block;
+        display: none;
+        font-style: italic;
     }
     #Page2Div {
         display: none;
+        font-style: italic;
     }
     #Page3Div {
         display: none;
+        font-style: italic;
+        font-style: italic;
     }
     #Page4Div {
         display: none;
+        font-style: italic;
     }
     #Page5Div {
         display: none;
+        font-style: italic;
     }
     #Page1 {
-       visibility: visible;
-
+        visibility: visible;
     }
     #Page2 {
-       visibility: hidden;
-
+        visibility: hidden;
     }
     #Page3 {
         visibility: hidden;
@@ -45,16 +47,19 @@
     }
     #Page5 {
         visibility: hidden;
+        font-style: italic;
     }
     #selectButton {
         display: none;
         background-color: transparent;
-        border: 0.125em solid #ad1639;
+        border: 0.125em solid black;
         border-radius: 0.9375em;
         box-sizing: border-box;
         color: #ad1639;
         cursor: pointer;
-        font-family: Lato,Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        font-family: Lato, Roobert, -apple-system, BlinkMacSystemFont,
+            'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+            'Segoe UI Emoji', 'Segoe UI Symbol';
         font-size: 14px;
         font-weight: 550;
         line-height: normal;
@@ -65,7 +70,7 @@
         padding: 1em 2.3em;
         text-align: left;
         text-decoration: none;
-        transition: all 500ms cubic-bezier(.23, 1, 0.32, 1);
+        transition: all 500ms cubic-bezier(0.23, 1, 0.32, 1);
         user-select: none;
         -webkit-user-select: none;
         touch-action: manipulation;
@@ -75,7 +80,7 @@
         color: black;
         border: 0.125em solid black;
 
-        background-color:#ad1639;
+        background-color: rgb(173, 22, 57, 0.8);
         box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
         transform: translateY(-2px);
     }
@@ -85,17 +90,18 @@
         transform: translateY(0);
     }
 
-
     button {
         appearance: none;
         background-color: transparent;
-        border: 0.125em solid #1A1A1A;
+        border: 0.125em solid #1a1a1a;
         border-radius: 0.9375em;
         box-sizing: border-box;
-        color: #3B3B3B;
+        color: #3b3b3b;
         cursor: pointer;
         display: inline-block;
-        font-family: Lato,Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        font-family: Lato, Roobert, -apple-system, BlinkMacSystemFont,
+            'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+            'Segoe UI Emoji', 'Segoe UI Symbol';
         font-size: 14px;
         font-weight: 550;
         line-height: normal;
@@ -106,7 +112,7 @@
         padding: 1em 2.3em;
         text-align: center;
         text-decoration: none;
-        transition: all 500ms cubic-bezier(.23, 1, 0.32, 1);
+        transition: all 500ms cubic-bezier(0.23, 1, 0.32, 1);
         user-select: none;
         -webkit-user-select: none;
         touch-action: manipulation;
@@ -119,7 +125,7 @@
 
     button:hover {
         color: #fff;
-        background-color: steelblue;
+        background-color: rgb(70, 130, 180, 0.85);
         box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
         transform: translateY(-2px);
     }
@@ -128,7 +134,7 @@
         box-shadow: none;
         transform: translateY(0);
     }
-      
+
     body {
         background-color: #f2f2f2;
         font-family: 'Lato';
@@ -250,40 +256,79 @@
         </div>
     </div>
 
-    <h2>CS411 Narrative Visualization</h2>
-    <p>The stock market varies for different coutnries <br> this is cool yo.</p>
-    <P>new para</P>
-    <button id="Page1" class="button">Page 1 🇺🇸</button>
-    <button id="Page2">Page 2 🇯🇵</button>
-    <button id="Page3">Page 3 🇭🇰</button>
-    <button id="Page4">Page 4 🇪🇺</button>
-    <button id="Page5">Page 5 🇪🇺</button>
+    <h1>CS411 Narrative Visualization</h1>
+    <h2>Explore Stock Markets Around The World 🌎</h2>
+    <p>
+        Despite how connected the global economy is, stock exchanges based in
+        different countries can experience remarkably different rates of
+        <span style="color: green; font-weight: bold"> growth</span> and
+        <span style="color: red; font-weight: bold"> decline</span>.
+        <br />
+        This is due to underlying <i>social</i>, <i>political</i>, and
+        <i>environmental</i> conditions affecting markets based in different
+        regions.
+        <br />
+        This website provides a way to interactively explore stock market data
+        of different exchanges.
+    </p>
+
+    <p>
+        <br />
+        <i>Click on the <b>buttons</b> below to progress.</i>
+    </p>
+    <button id="Page1">Explore: New York 🇺🇸</button>
+    <button id="Page2">Explore: Tokyo 🇯🇵</button>
+    <button id="Page3">Explore: Hong Kong 🇭🇰</button>
+    <button id="Page4">Explore: Europe 🇪🇺</button>
+    <button id="Page5">Free Explore</button>
     <p></p>
-    <select id="selectButton" title="Explore">Explore All</select>
+    <select id="selectButton" title="Explore">
+        Explore All
+    </select>
 
-    <div id="Page1Div"
-    <p> Hello everyone</p>
-    <p> Welcome 🇺🇸</p>
+    <div id="Page1Div">
+        <p>
+            The New York Stock Exchange (NYSE), nicknamed "The Big Board")
+            <br />
+            is located in the Financial District of Lower Manhattan in New York
+            City. <br />
+            It is the largest stock exchange in the world.
+        </p>
+        <br />
+        <br />
     </div>
 
-    <div id="Page2Div"
-    <p> Hello everyone</p>
-    <p> Welcome to page 2</p>
+    <div id="Page2Div">
+        <p>
+            The TSE runup from 1983 to 1990 was unprecedented,
+            <br />
+            in 1990 it accounted for over 60% of the world's stock market
+            capitalization
+            <br />
+            before falling precipitously in value and rank to one of the 4th
+            largest exchange in the world
+            <br />by market capitalization of listed shares.
+        </p>
+        <br />
+        <br />
     </div>
 
-    <div id="Page3Div"
-    <p> Hello everyone</p>
-    <p> Welcome to page 3</p>
+    <div id="Page3Div">
+        <p>Hello everyone</p>
+        <p>Welcome to page 3</p>
     </div>
 
-    <div id="Page4Div"
-    <p> Hello everyone</p>
-    <p> Welcome to page 4</p>
+    <div id="Page4Div">
+        <p>Hello everyone</p>
+        <p>Welcome to page 4</p>
     </div>
 
-    <div id="Page5Div"
-    <p> <br> View any market</p>
-    <p> Welcome to page 5</p>
+    <div id="Page5Div">
+        <p>
+            <br />
+            View any market
+        </p>
+        <p>Welcome to page 5</p>
     </div>
 
     <!-- Load d3.js -->

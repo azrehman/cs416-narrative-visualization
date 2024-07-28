@@ -152,7 +152,7 @@ const data = d3
 // Declare the chart dimensions and margins.
 const width = 900;
 const height = 500;
-const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+const margin = { top: 20, right: 30, bottom: 30, left: 50 };
 
 function plot(marketData, title = '') {
     // marketData.sort((a, b) => a.date - b.date);
@@ -241,7 +241,7 @@ function plot(marketData, title = '') {
                     .attr('y', 10)
                     .attr('fill', 'currentColor')
                     .attr('text-anchor', 'start')
-                    .text('↑ Daily Close ($)')
+                    .text('↑ Close Price ($)')
             );
     // add y axis
     const gy = svg.append('g').call(yAxis, y);
@@ -399,7 +399,7 @@ function plot(marketData, title = '') {
             .attr('class', 'tooltip')
             .style('display', 'block')
             .style('left', `${xPos + 25}px`)
-            .style('top', `${yPos + 35}px`)
+            .style('top', `${yPos + height - 100}px`)
             .attr('position', 'fixed')
             .html(
                 `<strong>Close:</strong> ${
