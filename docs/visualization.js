@@ -400,19 +400,21 @@ function plot(marketData, title = '') {
         tooltipPointer.transition().duration(50).attr('r', 5);
 
         // add in tooltip
-        const yy =
+        const toolTipTopPos =
             window.pageYOffset +
             this.getScreenCTM().translate(
                 +this.getAttribute('cx'),
                 +this.getAttribute('cy')
             ).f +
-            100;
-        console.log(yy, yPos);
+            yPos;
+
+        console.log(toolTipTopPos);
+
         tooltip
             .attr('class', 'tooltip')
             .style('display', 'block')
             .style('left', `${xPos + 25}px`)
-            .style('top', `${yy}px`)
+            .style('top', `${toolTipTopPos}px`)
             // .attr('position', 'absolute')
             .html(
                 `<strong>Close:</strong> ${
