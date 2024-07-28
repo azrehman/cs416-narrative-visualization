@@ -5,7 +5,7 @@
 Abdullah Rehman
 
 
-### dataset
+#### dataset
 
 <https://www.kaggle.com/datasets/mattiuzc/stock-exchange-data?select=indexProcessed.csv>
 
@@ -38,11 +38,11 @@ Abdullah Rehman
 
 - **Annotations:** What template was followed for the annotations, and why that template? How are the annotations used to support the messaging? Do the annotations change within a single scene, and if so, how and why
 
-To create my annotations I used the [d3-annotation](https://d3-annotation.susielu.com/) library by Susie Lu to use as a template for my annotations. The library proves attributes like title, and annotation width so I can label sections of my charts.
+	To create my annotations I used the [d3-annotation](https://d3-annotation.susielu.com/) library by Susie Lu to use as a template for my annotations. The library proves attributes like title, and annotation width so I can label sections of my charts.
 
-My annotations provide much needed context for explaining the events that caused the big downward spikes leading to a crash in stock price. My annotations are the same in each scene but correctly align with each chart's X-axis (date) and automatically disappear if the user zooms in since they are meant to give a high level overview.
+	My annotations provide much needed context for explaining the events that caused the big downward spikes leading to a crash in stock price. My annotations are the same in each scene but correctly align with each chart's X-axis (date) and automatically disappear if the user zooms in since they are meant to give a high level overview.
 
-In each chart, they bring the reader's attention to bear markets that they may otherwise not have known the cause for.
+	In each chart, they bring the reader's attention to bear markets that they may otherwise not have known the cause for.
 
 - **Parameters:** What are the parameters of the narrative visualization? What are the states of the narrative visualization? How are the parameters used to define the state and each scene?
 
@@ -64,7 +64,7 @@ In each chart, they bring the reader's attention to bear markets that they may o
           - Affordance: Distinguished from plaintext using CSS to make interactivity obvious.
   	- Mouse move/hover events:
     	- Updates the tooltip popup to display the exact date and price.
-        	- Affordance: User can hover anywhere on line-chart to display tooltip. Don't have to be directly on top of the line.
+        	- Affordance: User can hover anywhere on line-chart to display tooltip. Mouse does not have to be directly on top of the line.
   	- Mouse leave events:
     	- Removes tooltip popup when user's mouse leaves the SVG window
   	- Mouse drag events:
@@ -72,4 +72,4 @@ In each chart, they bring the reader's attention to bear markets that they may o
         	- Affordance: Tip provided to explain functionality.
   	- Mouse double click events:
     	- Resets zoom level.
-        - Affordance: Tip provided to explain functionality.
+          - Affordance: Tip provided to explain functionality.
