@@ -377,7 +377,10 @@ function plot(marketData, title = '') {
         .style('pointer-events', 'none');
 
     // create tooltip div
-    const tooltip = d3.select('#tooltip');
+    const tooltip = d3
+        .select('#tooltip')
+        .append('div')
+        .style('position', 'absolute');
 
     svg.append('rect');
 
@@ -397,12 +400,20 @@ function plot(marketData, title = '') {
         tooltipPointer.transition().duration(50).attr('r', 5);
 
         // add in tooltip
+        const yy =
+            window.pageYOffset +
+            this.getScreenCTM().translate(
+                +this.getAttribute('cx'),
+                +this.getAttribute('cy')
+            ).f +
+            100;
+        console.log(yy, yPos);
         tooltip
             .attr('class', 'tooltip')
             .style('display', 'block')
             .style('left', `${xPos + 25}px`)
-            .style('top', `${yCoord}px`)
-            .attr('position', 'fixed')
+            .style('top', `${yy}px`)
+            // .attr('position', 'absolute')
             .html(
                 `<strong>Close:</strong> ${
                     d.close !== undefined ? formatValue(d.close) : 'N/A'
